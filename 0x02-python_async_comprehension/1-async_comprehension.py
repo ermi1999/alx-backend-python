@@ -2,8 +2,8 @@
 """
 module for creating async comprehension.
 """
-import asyncio
 async_generator = __import__('0-async_generator').async_generator
+import asyncio
 from typing import List
 
 
