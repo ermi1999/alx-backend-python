@@ -47,8 +47,8 @@ class TestGithubOrgClient(unittest.TestCase):
 
         with mock.patch(
              'client.GithubOrgClient._public_repos_url') as mock_public:
-            mock_public.return_value = "hey there!"
-            test_class = GithubOrgClient('test')
+            mock_public.return_value = "https://api.github.com/orgs/google"
+            test_class = GithubOrgClient('google')
             result = test_class.public_repos()
 
             expected = [p["name"] for p in payloads]
