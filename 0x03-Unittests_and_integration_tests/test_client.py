@@ -48,4 +48,4 @@ class TestGithubOrgClient(unittest.TestCase):
             repos = client.public_repos()
             self.assertEqual(repos, ["gmail", "google_drive"])
             mocked.assert_called_once()
-            mocked_get.assert_called_once()
+        mocked_get.assert_called_once()
