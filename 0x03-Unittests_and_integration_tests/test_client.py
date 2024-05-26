@@ -37,13 +37,22 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(
                 client._public_repos_url, "https://api.github.com/orgs/google")
 
-    @mock.patch('client.get_json', return_value=[{"name": "gmail"}, {"name": "google_drive"}])
-    def test_public_repos(self, mocked_get):
-        """test for public repos method"""
-        with mock.patch('client.GithubOrgClient._public_repos_url', new_callable=mock.PropertyMock) as mocked:
-            mocked.return_value = "https://api.github.com/orgs/google"
-            client = GithubOrgClient("google")
-            repos = client.public_repos()
-            self.assertEqual(repos, ["gmail", "google_drive"])
-            mocked.assert_called_once()
-            mocked_get.assert_called_once()
+    @mock.patch('client.get_json')
+    def test_public_repos(self, mock_json):
+        """Test TestGithubOrgClient.test_public_repos
+        return the correct value
+        """
+        payloads = [{"name": "google"}, {"name": "Twitter"}]
+        mock_json.return_value = payloads
+
+        with mock.patch(
+             'client.GithubOrgClient._public_repos_url') as mock_public:
+            mock_public.return_value = "hey there!"
+            test_class = GithubOrgClient('test')
+            result = test_class.public_repos()
+
+            expected = [p["name"] for p in payloads]
+            self.assertEqual(result, expected)
+
+            mock_json.called_with_once()
+            mock_public.called_with_once()
