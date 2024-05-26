@@ -30,6 +30,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @mock.patch('client.get_json', return_value=__payload)
     def test_public_repos(self, mocked_get):
+        """test for public repos method"""
         with mock.patch('client.GithubOrgClient._public_repos_url', new_callable=mock.PropertyMock) as mocked:
             mocked.return_value = "https://api.github.com/orgs/google"
             client = GithubOrgClient("google")
