@@ -16,7 +16,7 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map(self, nested_map, path, expected):
         """Test for test_access_nested_map function."""
         self.assertEqual(access_nested_map(nested_map, path), expected)
-    
+
     @parameterized.expand([
         ({}, ("a",)),
         ({"a": 1}, ("a", "b")),
@@ -53,13 +53,15 @@ class TestMemoize(unittest.TestCase):
     class TestClass:
         def a_method(self):
             return 42
-        
+
         @memoize
         def a_property(self):
             return self.a_method()
+
     def test_memoize(self):
         """test case for memoize decorator."""
-        with mock.patch.object(self.TestClass, 'a_method', return_value=42) as mocked_method:
+        with mock.patch.object(
+             self.TestClass, 'a_method', return_value=42) as mocked_method:
             test_class = self.TestClass()
             result1 = test_class.a_property
             result2 = test_class.a_property
