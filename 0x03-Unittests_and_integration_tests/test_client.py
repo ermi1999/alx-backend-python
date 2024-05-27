@@ -6,7 +6,6 @@ import unittest
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 from requests import HTTPError
-from typing import Dict
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -57,9 +56,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False)
         ])
-    def test_has_license(
-                        self, repo: Dict, licence_key: str, expected: bool
-                        ) -> None:
+    def test_has_license(self, repo, licence_key, expected):
         """test for licence"""
         self.assertEqual(
             GithubOrgClient.has_license(repo, licence_key),
