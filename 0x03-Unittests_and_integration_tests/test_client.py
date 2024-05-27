@@ -72,25 +72,22 @@ class TestGithubOrgClient(unittest.TestCase):
         'apache2_repos': TEST_PAYLOAD[0][3],
     },
 ])
-class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """integration test"""
+class TestIntegrationGithubOrgClient(TestCase):
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         """Set up for the test"""
-        route_payload = {
-            'https://api.github.com/orgs/google': cls.org_payload,
-            'https://api.github.com/orgs/google/repos': cls.repos_payload,
-        }
+        cls.get_patcher = mock.patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
 
-        def get_payload(url):
-            if url in route_payload:
-                return mock.Mock(**{'json.return_value': route_payload[url]})
-            return HTTPError
-
-        cls.get_patcher = mock.patch("requests.get", side_effect=get_payload)
-        cls.get_patcher.start()
+        # Set the side effect of the mock object
+        cls.mock_get.side_effect = [
+            cls.org_payload,
+            cls.repos_payload,
+            cls.expected_repos,
+            cls.apache2_repos
+        ]
 
     @classmethod
-    def tearDownClass(cls) -> None:
+    def tearDownClass(cls):
         """Tear down the test"""
         cls.get_patcher.stop()
