@@ -6,6 +6,7 @@ import unittest
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 from requests import HTTPError
+from typing import Dict
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -19,7 +20,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @parameterized.expand([("google",), ("abc",)])
     @mock.patch('client.get_json', return_value={"payload": True})
-    def test_org(self, org_name, mocked_get):
+    def test_org(self, org_name: str, mocked_get: mock.MagicMock) -> None:
         """test case for org method."""
         client = GithubOrgClient(org_name)
         result = client.org
@@ -27,7 +28,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mocked_get.assert_called_once_with(
             f"https://api.github.com/orgs/{org_name}")
 
-    def test_public_repos_url(self):
+    def test_public_repos_url(self) -> None:
         """Test for public_repos url method."""
         with mock.patch(
              'client.GithubOrgClient.org',
@@ -40,7 +41,7 @@ class TestGithubOrgClient(unittest.TestCase):
                 client._public_repos_url, "https://api.github.com/orgs/google")
 
     @mock.patch('client.get_json', return_value=__payload)
-    def test_public_repos(self, mocked_get):
+    def test_public_repos(self, mocked_get: mock.MagicMock) -> None:
         """test for public repos method"""
         with mock.patch(
              'client.GithubOrgClient._public_repos_url',
@@ -56,7 +57,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False)
         ])
-    def test_has_license(self, repo, licence_key, expected):
+    def test_has_license(self, repo: Dict, licence_key: str, expected: bool) -> None:
         """test for licence"""
         self.assertEqual(
             GithubOrgClient.has_license(repo, licence_key),
