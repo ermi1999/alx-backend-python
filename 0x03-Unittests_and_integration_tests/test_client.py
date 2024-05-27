@@ -75,7 +75,7 @@ class TestGithubOrgClient(unittest.TestCase):
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """integration test"""
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         """Set up for the test"""
         route_payload = {
             'https://api.github.com/orgs/google': cls.org_payload,
@@ -91,6 +91,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.get_patcher.start()
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         """Tear down the test"""
         cls.get_patcher.stop()
