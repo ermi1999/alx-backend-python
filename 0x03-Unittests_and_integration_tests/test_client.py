@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """This module tests the client module."""
 from unittest import mock
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 import unittest
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -60,3 +61,31 @@ class TestGithubOrgClient(unittest.TestCase):
             GithubOrgClient.has_license(repo, licence_key),
             expected
             )
+
+@parameterized_class([
+    {
+        'org_payload': TEST_PAYLOAD[0][0],
+        'repos_payload': TEST_PAYLOAD[0][1],
+        'expected_repos': TEST_PAYLOAD[0][2],
+        'apache2_repos': TEST_PAYLOAD[0][3],
+    },
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """integration test"""
+    @classmethod
+    def setUpClass(cls):
+        """Set up for the test"""
+        cls.get_patcher = mock.patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
+
+        cls.mock_get.side_effect = [
+            cls.org_payload,
+            cls.repos_payload,
+            cls.expected_repos,
+            cls.apache2_repos
+        ]
+    
+    @classmethod
+    def tearDownClass(cls):
+        """Tear down the test"""
+        cls.get_patcher.stop()
