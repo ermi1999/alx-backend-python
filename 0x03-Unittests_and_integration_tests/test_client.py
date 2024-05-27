@@ -62,6 +62,7 @@ class TestGithubOrgClient(unittest.TestCase):
             expected
             )
 
+
 @parameterized_class([
     {
         'org_payload': TEST_PAYLOAD[0][0],
@@ -84,7 +85,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             cls.expected_repos,
             cls.apache2_repos
         ]
-    
+
     @classmethod
     def tearDownClass(cls):
         """Tear down the test"""
