@@ -5,6 +5,7 @@ from parameterized import parameterized, parameterized_class
 import unittest
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
+from requests import HTTPError
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -76,15 +77,18 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up for the test"""
-        cls.get_patcher = mock.patch('requests.get')
-        cls.mock_get = cls.get_patcher.start()
+        route_payload = {
+            'https://api.github.com/orgs/google': cls.org_payload,
+            'https://api.github.com/orgs/google/repos': cls.repos_payload,
+        }
 
-        cls.mock_get.side_effect = [
-            cls.org_payload,
-            cls.repos_payload,
-            cls.expected_repos,
-            cls.apache2_repos
-        ]
+        def get_payload(url):
+            if url in route_payload:
+                return mock.Mock(**{'json.return_value': route_payload[url]})
+            return HTTPError
+
+        cls.get_patcher = mock.patch("requests.get", side_effect=get_payload)
+        cls.get_patcher.start()
 
     @classmethod
     def tearDownClass(cls):
